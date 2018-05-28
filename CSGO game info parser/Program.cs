@@ -13,7 +13,7 @@ namespace CSGO_game_info_parser {
 
         static void Main(string[] args) {
             //assuming first arg is html file location
-            loadHTML(args[0]);
+            loadHTML("D:\\data.html");
             //assuming second arg is player id
             List<HtmlNode> nodes = parseHTML();
             List<Game> games =  parseNodes(nodes);
@@ -22,7 +22,7 @@ namespace CSGO_game_info_parser {
         }
 
         static void doMathMagic(List<Game> games) {
-            int gamesCounter = 0, totalKills = 0, totalDeaths = 0, totalMVP = 0, totalAssist = 0;
+            int gamesCounter = 0, totalKills = 0, totalDeaths = 0, totalMVP = 0, totalAssist = 0, totalBans = 0, totalBansSincePlayed = 0;
             foreach (Game game in games) {
                 gamesCounter++;
                 foreach (Team team in game.Teams) {
@@ -31,7 +31,12 @@ namespace CSGO_game_info_parser {
                         totalDeaths += team.players[i].deaths;
                         totalMVP += team.players[i].mvp;
                         totalAssist += team.players[i].assists;
-
+                        if (team.players[i].banstatus != Banstatus.NO_BAN) {
+                            totalBans++;
+                            if (team.players[i].banstatus == Banstatus.GAME_AFTER || team.players[i].banstatus == Banstatus.VAC_AFTER) {
+                                totalBansSincePlayed++;
+                            }
+                        }
                     }
                 }
             }
@@ -40,7 +45,9 @@ namespace CSGO_game_info_parser {
                             + "total kills: " + totalKills + Environment.NewLine
                             + "total deaths: " + totalDeaths + Environment.NewLine
                             + "total MVP's: " + totalMVP + Environment.NewLine
-                            + "total assists: " + totalAssist + Environment.NewLine);
+                            + "total assists: " + totalAssist + Environment.NewLine
+                            + "total bans: " + totalBans + Environment.NewLine
+                            + "total bans since played: " + totalBansSincePlayed + Environment.NewLine);
         }
 
         static void loadHTML(string filepath) {
