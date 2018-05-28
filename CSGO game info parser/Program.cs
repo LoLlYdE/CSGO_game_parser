@@ -13,7 +13,7 @@ namespace CSGO_game_info_parser {
 
         static void Main(string[] args) {
             //assuming first arg is html file location
-            loadHTML("D:\\data.html");
+            loadHTML(args[0]);
             //assuming second arg is player id
             List<HtmlNode> nodes = parseHTML();
             List<Game> games =  parseNodes(nodes);
